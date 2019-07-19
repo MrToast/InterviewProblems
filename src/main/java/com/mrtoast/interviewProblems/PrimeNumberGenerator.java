@@ -1,5 +1,3 @@
-/* Copyright 2019 Jack Henry Software */
-
 package com.mrtoast.interviewProblems;
 
 import java.util.function.Consumer;
