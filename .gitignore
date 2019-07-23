@@ -1,3 +1,9 @@
+# Generated directories #
+#########################
+target/*
+test-output/*
+.classpath
+
 # Compiled source #
 ###################
 *.com
