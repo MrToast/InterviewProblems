@@ -1,93 +1,34 @@
 package com.mrtoast.interviewProblems.fileNaming;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * Generates backup files, renaming older backups if necessary
+ */
 public class FileNamer
 {
-private final int maxBackups;
+	private final int maxBackups;
 	
-	private final Path outputFilePath;
-	private final Formatter formatter;
-	
-	public FileNamer(Path outputFilePath, int maxBackups, Formatter formatter)
+	public FileNamer(int maxBackups)
 	{
-		this.outputFilePath = outputFilePath;
 		this.maxBackups = maxBackups;
-		this.formatter = formatter;
-	}
-	
-	public void writeHeader() throws IOException
-	{
-		backupOrCreateFile(outputFilePath);
-		String header = formatter.writeHeader();
-		write(header);
-	}
-	
-	public void writeMessage() throws IOException
-	{
-		String message = formatter.writeMessage();
-		write(message);
-	}
-	
-	public void writeTail() throws IOException
-	{
-		String tail = formatter.writeTail();
-		write(tail);
-	}
-
-	void write(String report) throws IOException
-	{
-		write(report, Charset.defaultCharset());
-	}
-	
-	private void write(String report, Charset charset) throws IOException
-	{
-		writeBufferedWriter(outputFilePath, report, charset);
 	}
 	
 	/**
-	 * Appends the report to file.
 	 * 
-	 * All instances of ProfilerReporter synchronize on the path parameter of this
-	 * method to prevent multiple instances from attempting to write to file simultaneously.
-	 * 
-	 * @param path Path
-	 * @param report String
-	 * @param charset Charset
-	 * @throws IOException exception
+	 * @param path
+	 * @throws IOException
 	 */
-	private static void writeBufferedWriter(Path path, String report, Charset charset) throws IOException
-	{
-		synchronized (path)
-		{
-			try(BufferedWriter writer = new BufferedWriter(
-					new OutputStreamWriter(new FileOutputStream(path.toFile(), true), charset)))
-			{
-				writer.append(report);
-			}
-		}
-	}
-	
-	
-	
-//	===============================
-//	| Backup profiler report file |
-//	===============================
-	
-	private void backupOrCreateFile(Path path) throws IOException
+	public void backupOrCreateFile(Path path) throws IOException
 	{
 		synchronized (path)
 		{
 			if (path.toFile().exists())
 			{
-				backupExistingReport(path);
+				backupExistingFile(path);
 			}
 			else
 			{
@@ -97,16 +38,13 @@ private final int maxBackups;
 	}
 	
 	/**
-	 * Generates backup files of the profiler report file, renaming older backups if necessary.
-	 * 
-	 * All instances of ProfilerReporter synchronize on the path parameter of this
-	 * method to prevent multiple instances from attempting to access a file simultaneously.
+	 * Generates backup files, renaming older backups if necessary..
 	 * 
 	 * @param directory Path
 	 * @param filename String
 	 * @throws IOException exception
 	 */
-	private void backupExistingReport(Path path) throws IOException
+	private void backupExistingFile(Path path) throws IOException
 	{
 		synchronized (path)
 		{
@@ -136,7 +74,7 @@ private final int maxBackups;
 	}
 	
 	/**
-	 * Creates a new File in the provided directory with the profiler report backup filename.
+	 * Creates a new File in the provided directory with the backup filename.
 	 * 
 	 * @param directory Path
 	 * @param filename String
@@ -149,11 +87,11 @@ private final int maxBackups;
 	}
 	
 	/**
-	 * Generates the profiler report backup filename.
+	 * Generates the backup filename.
 	 * 
 	 * @param baseFileName the un-numbered filename
 	 * @param number the backup number to append
-	 * @return String the generated profiler report backup filename.
+	 * @return String the generated backup filename.
 	 */
 	private static String generateBackupFileName(String baseFileName, int number) 
 	{
@@ -186,21 +124,6 @@ private final int maxBackups;
 						throw new IOException("File rename failed: " + originalFile.toString());
 				}
 			}
-		}
-	}
-	
-	static interface Formatter {
-		
-		public default String writeHeader() {
-			return "Header" + System.lineSeparator();
-		}
-		
-		public default String writeMessage() {
-			return "Message" + System.lineSeparator();
-		}
-
-		public default String writeTail() {
-			return "End" + System.lineSeparator();
 		}
 	}
 }

@@ -226,24 +226,25 @@ public class SimpleDate implements Comparable<SimpleDate>
 	private void setEpochTimeFromDate()
 	{
 		// move January and February to end of previous year
-		int a = (14 - month)/12;
+		int a = (14 - month)/12; //will return 1 for Jan, Feb, and 0 otherwise
 		int adjYear = year - a;
 		int yearDays = 365*adjYear + (year/4 - year/100 + year/400);
 		
 		int adjMonth = month + 12*a - 3; //march = 0, February = 11
+		
 		int monthDays = (153*adjMonth + 2)/5; //calculates days since 01-March to beginning of month
 		
-		int adjDays = day - 1; //remove 1 day and adjust days to start month
+		int days = day;
 		if (isLeapYear(year) && (month < 3))
 		{
-			adjDays += 59;
+			days += 58;
 		}
 		else
 		{
-			adjDays += 60;
+			days += 59;
 		}
 		
-		long totalDays = yearDays + monthDays + adjDays;
+		long totalDays = yearDays + monthDays + days;
 		
 		long daysSinceEpoch = totalDays - DAYS_0_TO_1970;
 		
@@ -336,7 +337,7 @@ public class SimpleDate implements Comparable<SimpleDate>
 		int totalMonths = (5*remainder + 2)/153; //calculates months since 01-March
 		int days = remainder - (153*totalMonths + 2)/5;
 		
-		int a = (totalMonths)/10;
+		int a = (totalMonths)/10; //will return 1 for Jan, Feb, 0 otherwise
 		year = (short) (totalYears + a);
 		month = (byte) ((totalMonths + 3) - 12*(totalMonths/10));
 		day = (byte) (days + 1);

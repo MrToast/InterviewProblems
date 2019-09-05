@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collector;
 
-import com.mrtoast.interviewProblems.PrimeNumberGenerator;
+import com.mrtoast.interviewProblems.FibonacciNumberGenerator;
 import com.mrtoast.interviewProblems.PriorityQueue;
 import com.mrtoast.interviewProblems.StringReverser;
 
@@ -17,8 +17,8 @@ public class Main
 	 */
 	public static void main(String[] args) throws Exception
 	{
-		List<Integer> list = Arrays.asList(1,2,3,4,5,6,45);
-		list.stream().map(PrimeNumberGenerator::getPrime).forEach(System.out::println);
+		List<Integer> list = Arrays.asList(1,2,3,4,5,6,7,8,9,45);
+		list.stream().map(FibonacciNumberGenerator::getFibonacci).forEach(System.out::println);
 		
 		
 		StringReverser.printReverse("a,b,c,d");
